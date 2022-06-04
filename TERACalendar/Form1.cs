@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraScheduler;
 using DevExpress.XtraScheduler.Drawing;
+using DevExpress.XtraScheduler.Internal.Implementations;
 using DevExpress.XtraSplashScreen;
 using System;
 using System.ComponentModel;
@@ -23,8 +24,14 @@ namespace TERACalendar
             schedulerControl1.PopupMenuShowing += SchedulerControl1_PopupMenuShowing;
             schedulerControl1.EditAppointmentFormShowing += SchedulerControl1_EditAppointmentFormShowing;
             schedulerControl1.InitAppointmentImages += SchedulerControl1_InitAppointmentImages;
+            schedulerControl1.DataStorage.AppointmentDeleting += DataStorage_AppointmentDeleting;
             schedulerControl1.Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 01);
             GetItemsFromDB();
+        }
+
+        private void DataStorage_AppointmentDeleting(object sender, PersistentObjectCancelEventArgs e)
+        {
+            SQLManager.DeleteItem(((AppointmentItem)e.Object).Start);
         }
 
         protected override void OnClosing(CancelEventArgs e)
